@@ -1,0 +1,32 @@
+*{
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  max-width: 100%;
+}
+
+body{
+  font-family: 'Raleway', sans-serif;
+  height: 100%;
+}
+
+.row{
+  display: flex;
+}
+
+.col{
+  display: flex;
+  flex-direction: column;
+}
+
+.swiper{
+  max-height: 100%;
+}
+
+.swiper-slide-shadow-left.swiper-slide-shadow-flip {
+  background-image: none;
+}
+
+.swiper-slide-shadow-right.swiper-slide-shadow-flip {
+  background-image: none;
+}
