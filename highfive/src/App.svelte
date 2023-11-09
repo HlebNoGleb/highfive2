@@ -1,4 +1,6 @@
 <script>
+// @ts-nocheck
+
     import { _ } from 'svelte-i18n';
     import Stopwatch from "./lib/stopwatch.svelte";
     import Weather from "./lib/weather.svelte";
@@ -7,40 +9,79 @@
     import Localizator from "./lib/localizator.svelte";
     import ThemeChanger from "./lib/themeChanger.svelte";
     import TechSlider from './lib/sliders/tech.svelte';
+    import Games from './lib/sliders/games.svelte';
+    import FullscreenPopup from './lib/fullscreenPopup.svelte';
+
+    function showPopup(component) {
+      let target = event.target;
+
+      if (!target.matches("[class^='block-']")) {
+        target = event.target.closest("[class^='block-']");
+      }
+
+      if (!target) {
+        return;
+      }
+
+      const popupTarget = document.getElementById("main");
+
+      if (popupTarget.querySelector('.fullscreen-popup')) {
+        return;
+      }
+
+      const rect = target.getBoundingClientRect();
+      const position = {
+        top: rect.top,
+        left: rect.left,
+        width: rect.width,
+        height: rect.height
+      }
+
+      const popup = new FullscreenPopup({
+        target: popupTarget,
+        props: {
+          active: true,
+          position: position,
+          component: component
+        }
+      })
+    }
 
 </script>
-
-<main>
+<!-- svelte-ignore a11y-click-events-have-key-events -->
+<main id="main">
   <div class="grid">
     <div class="block-1">
-      <div>
+      <div class="p-10" on:click={() => {showPopup(Stopwatch)}}>
         <Stopwatch/>
       </div>
-      <div>
+      <div class="p-10" on:click={() => {showPopup(Weather)}}>
         <Weather />
       </div>
     </div>
-    <div class="block-2">
-      <img src="{logo}" style="width: 10vmax;" alt="highfive logo"/>
+    <div class="block-2" on:click={() => {showPopup(Games)}}>
+      <img src="{logo}" style="width: 10vmax;" class="p-10" alt="highfive logo"/>
     </div>
-    <div class="block-3">
+    <div class="block-3 p-10">
       <p>{$_('block-3.text')}</p>
     </div>
     <div class="block-4">
-      <div class="locale">
+      <div class="locale p-10">
         <Localizator/>
       </div>
-      <div class="theme">
+      <div class="theme p-10">
         <ThemeChanger />
       </div>
-      <div style="display: block;" class="slider">
+      <div style="display: block;" class="slider p-10"  on:click={() => {showPopup(TechSlider)}}>
         <TechSlider />
       </div>
-      <div class="qr">
+      <div class="qr p-10">
         <img src="{qr}" alt="qr code"/>
       </div>
     </div>
-    <div class="block-5"></div>
+    <div class="block-5">
+      <Games callback={showPopup}/>
+    </div>
     <div class="block-6"></div>
     <div class="block-7"></div>
     <div class="block-8"></div>
@@ -56,14 +97,14 @@
     display: grid;
     grid-template-areas: "block-1 block-2 block-3 block-4" "block-5 block-6 block-7 block-11" "block-8 block-9 block-10 block-11";
     grid-template-columns: 25vw 25vw 25vw 25vw;
-    grid-template-rows: repeat(3, 33.3vh);
+    grid-template-rows: repeat(3, 33.33333vh);
     max-width: 100vw;
     overflow-x: hidden;
     /* min-height: 100vh; */
   }
   .grid > div{
-    padding: 10px;
     overflow: hidden;
+    position: relative;
   }
 
   .block-1{
@@ -107,7 +148,8 @@
 
   .block-4 img{
     margin: auto;
-    max-height: 70%;
+    max-height: 100%;
+    padding: 10px;
   }
   .block-5{
     grid-area: block-5;
@@ -145,8 +187,8 @@
   @media(max-width: 1366px){
     .grid{
         grid-template-areas: "block-1 block-2 block-4" "block-6 block-7 block-11" "block-5 block-10 block-11" "block-3 block-8 block-9";
-        grid-template-columns: 33.3vw 33.3vw 33.3vw;
-        grid-template-rows: repeat(4, 33.3vh);
+        grid-template-columns: 33.3333vw 33.3333vw 33.3333vw;
+        grid-template-rows: repeat(4, 33.3333vh);
     }
   }
 
